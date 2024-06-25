@@ -10,7 +10,7 @@
          <div class="row">
             <div class="col-12">
                <div class="page-title-box d-flex align-items-center justify-content-between">
-                  <h4 class="mb-0">Manage Categories</h4>
+                  <h4 class="mb-0">Banner List</h4>
                </div>
             </div>
          </div>
@@ -21,7 +21,7 @@
                   <div class="card-header d-flex justify-content-end align-items-center gap-2">
                      <div class="btn-actions d-flex gap-2 me-1">
                         <button type="button" class="btn btn-primary waves-effect btn-label waves-light" onclick="pageRedirect()">
-                            <i class="bx bx-plus-circle label-icon"></i>Add Category
+                            <i class="bx bx-plus-circle label-icon"></i>Add Banner
                         </button>
                      </div>
                   </div>
@@ -32,61 +32,47 @@
                            <tr>
                               <th style="border-right: 0.3px solid grey;">Id</th>
                               <th style="border-right: 0.3px solid grey;">Name</th>
-                              <th style="border-right: 0.3px solid grey;">Images</th>
+                              <th style="border-right: 0.3px solid grey;">Types</th>
                               <th style="border-right: 0.3px solid grey;">Added Date</th>
                               <th style="border-right: 0.3px solid grey;">Update Date</th>
                               <th style="border-right: 0.3px solid grey;">Status</th>
-                               <th style="border-right: 0.3px solid grey;">Display Home</th>
                               <th>Action</th>
                            </tr>
                         </thead>
                         <tbody>
                            <?php 
-                           $listSql = mysqli_query($conn, "SELECT * FROM categories ORDER BY categories_id DESC");
+                           $listSql = mysqli_query($conn, "SELECT * FROM banner ORDER BY banner_id DESC");
                            while($listData = mysqli_fetch_assoc($listSql)) {
-                               $categories_id = $listData['categories_id'];
-                               $subcategoriesSql = mysqli_query($conn, "SELECT * FROM subcategories WHERE categories_id = '$categories_id'");
+                               
                            ?>
                            <tr>
-                              <td style="border-right: 0.3px solid black;"><?php echo $listData['categories_id']; ?></td>
-                              <td style="border-right: 0.3px solid grey;"><?php echo $listData['categories_name']; ?></td>
-                              <td><img src="../media/<?php echo $listData['images']; ?>" style="height: 50px; width: 50px;"></td>
+                              <td style="border-right: 0.3px solid black;"><?php echo $listData['banner_id']; ?></td>
+                              <td style="border-right: 0.3px solid grey;"><?php echo $listData['banner_name']; ?></td>
+
+                              <td style="border-right: 0.3px solid grey;"><?php echo $listData['banner_type']; ?></td>
                          
                               <td style="border-right: 0.3px solid grey;"><?php echo $listData['added_on']; ?></td>
-                              <td style="border-right: 0.3px solid grey;"><?php echo $listData['update_on']; ?></td>
-<td style="border-right: 0.3px solid grey;">
-    <div class="square-switch">
-        <?php 
-        $checked = $listData["categories_status"] == 1 ? 'checked' : '';
-        ?>
-        <input type="checkbox" id="categories-switch<?php echo $listData['categories_id']; ?>" switch="bool" <?php echo $checked; ?> onclick="changeStatus(<?php echo $listData['categories_id']; ?>);" />
-        <label for="categories-switch<?php echo $listData['categories_id']; ?>" data-on-label="Yes" data-off-label="No"></label>
-    </div>
-</td>
-<td style="border-right: 0.3px solid grey;">
-    <div class="square-switch">
-        <?php 
-        $checked = $listData["isdisplayhome"] == 1 ? 'checked' : '';
-        ?>
-        <input type="checkbox" id="displayhome-switch<?php echo $listData['categories_id']; ?>" switch="bool" <?php echo $checked; ?> onclick="displayHome(<?php echo $listData['categories_id']; ?>);" />
-        <label for="displayhome-switch<?php echo $listData['categories_id']; ?>" data-on-label="Yes" data-off-label="No"></label>
-    </div>
-</td>
-
+                              <td style="border-right: 0.3px solid grey;"><?php echo $listData['updated_on']; ?></td>
+                              <td style="border-right: 0.3px solid grey;">
+                                 <div class="square-switch">
+                                    <?php 
+                                    $checked = $listData["banner_status"] == 1 ? 'checked' : '';
+                                    ?>
+                                    <input type="checkbox" id="square-switch<?php echo $listData['banner_id']; ?>" switch="bool" <?php echo $checked; ?> onclick="changeStatus(<?php echo $listData['banner_id']; ?>);" />
+                                    <label for="square-switch<?php echo $listData['banner_id']; ?>" data-on-label="Yes" data-off-label="No"></label>
+                                 </div>
+                              </td>
                               <td>
                                  <div class="table-btn-actions">
                                     <button type="button" class="btn btn-success">
-                                        <a href="edit_category.php?type=edit&id=<?php echo $listData['categories_id']; ?>" style="color:white;">
+                                        <a href="edit_banner.php?type=edit&id=<?php echo $listData['banner_id']; ?>" style="color:white;">
                                         <i class="bx bxs-edit label-icon"></i></a>
                                     </button>
-                                    <button type="button" onclick="deleteCategory(<?php echo $listData['categories_id']; ?>)" class="btn btn-danger ">
+                                    <button type="button" onclick="deleteCategory(<?php echo $listData['banner_id']; ?>)" class="btn btn-danger ">
                                         <i class="mdi mdi-trash-can label-icon"></i>
                                     </button>
 
-                                    <button type="button" class="btn btn-success">
-                                        <a href="subcategories_listing.php?type=subcategories&id=<?php echo $listData['categories_id']; ?>" style="color:white;">
-                                        <i class="bx bx-sitemap icon nav-icon"></i></a>
-                                    </button>
+                                 
 
 
                                  </div>
@@ -107,35 +93,12 @@
 
 <script>
    function pageRedirect() {
-       window.location.href = 'add_category.php';
+       window.location.href = 'add_banner.php';
    }
-
-
-function displayHome(id) {
-    $.ajax({
-        url: 'update_isdisplay.php',
-        type: 'POST',
-        data: { id: id },
-        success: function(response) {
-            var statusRes = JSON.parse(response);
-            if(statusRes.status=='true'){
-                alertify.set('notifier','position', 'top-right');
-                alertify.success("Is Display Status Update Successfully.");
-            }
-            if(statusRes.status=='false'){
-                alertify.set('notifier','position', 'top-right');
-                alertify.error("Something Went Wrong.Please Try Again.");
-            }
-        },
-        error: function(xhr, status, error) {
-            alertify.error(error);
-        }
-    });
-}
 
    function changeStatus(id) {
        $.ajax({
-           url: 'update_category_status.php',
+           url: 'banner_status_update.php',
            type: 'POST',
            data: { id: id },
            success: function(response) {
@@ -168,7 +131,7 @@ function deleteCategory(id) {
     }).then((result) => {
         if (result.isConfirmed) {
             $.ajax({
-                url: 'delete_category.php',
+                url: 'delete_banner.php',
                 type: 'POST',
                 data: { id: id },
                 success: function(response) {
@@ -176,11 +139,11 @@ function deleteCategory(id) {
                     if (data.status == 'true') {
                         Swal.fire({
                             title: "Success",
-                            text: "Category deleted successfully.",
+                            text: "Banner deleted successfully.",
                             icon: "success",
                             button: "Okay",
                         }).then(function() {
-                            window.location = "categories.php";
+                            window.location = "banner.php";
                         });
                     } else {
                         Swal.fire({

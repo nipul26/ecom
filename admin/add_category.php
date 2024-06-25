@@ -8,53 +8,72 @@ if(isset($_POST['submit'])){
     $categories_name = mysqli_real_escape_string($conn, $_POST['categories_name']);
     $added_on = date('Y-m-d H:i:s');
     $updated_on = date('Y-m-d H:i:s');
+    $isDisplayHome = isset($_POST['banner_status']) ? 1 : 0;
 
-    // Assuming this script is in the 'admin' folder and media folder is in the project root
     $target_dir = "../media/";
+
     $target_file = $target_dir . basename($_FILES["category_image"]["name"]);
     $uploadOk = 1;
     $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
 
-    // Check if image file is a actual image or fake image
     $check = getimagesize($_FILES["category_image"]["tmp_name"]);
-    if($check === false) {
-        echo "<script>swal('Error', 'File is not an image.', 'error');</script>";
+    if($check === false) { ?>
+        <script>swal('Error', 'File is not an image.', 'error');</script>
+        <?php
         $uploadOk = 0;
     }
 
-    // Check file size (5MB max)
     if ($_FILES["category_image"]["size"] > 5000000) {
-        echo "<script>swal('Error', 'File is too large.', 'error');</script>";
+        ?>
+        <script>swal('Error', 'File is too large.', 'error');</script>
+        <?php
         $uploadOk = 0;
     }
 
-    // Allow certain file formats
     if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "gif" ) {
-        echo "<script>swal('Error', 'Only JPG, JPEG, PNG & GIF files are allowed.', 'error');</script>";
+        ?>
+        <script>swal('Error', 'Only JPG, JPEG, PNG & GIF files are allowed.', 'error');</script>
+        <?php
         $uploadOk = 0;
     }
 
-    // Check if category name is valid
     if(!preg_match('/^[a-zA-Z][a-zA-Z0-9_]*$/', $categories_name)){
-        echo "<script>swal('Error', 'Category name must start with alphabets and cannot contain spaces or special characters at the beginning.', 'error');</script>";
+        ?>
+        <script>swal('Error', 'Category name must start with alphabets and cannot contain spaces or special characters at the beginning.', 'error');</script>
+        <?php
     } else {
         $checkSql = mysqli_query($conn,"SELECT * FROM categories WHERE categories_name = '$categories_name'");
         if(mysqli_num_rows($checkSql) > 0){
-            echo "<script>swal('Error', 'Data Already Exist.', 'error');</script>";
+            ?>
+            <script>swal('Error', 'Data Already Exist.', 'error');</script>
+            <?php
         } else {
             if ($uploadOk == 0) {
-                echo "<script>swal('Error', 'Your file was not uploaded.', 'error');</script>";
+                ?>
+                <script>swal('Error', 'Your file was not uploaded.', 'error');</script>
+                <?php
             } else {
-                // Try to upload file
-                if (move_uploaded_file($_FILES["category_image"]["tmp_name"], $target_file)) {
-                    $insertSql = mysqli_query($conn,"INSERT INTO `categories`(`categories_name`, `categories_status`, `images`, `added_on`, `update_on`) VALUES ('$categories_name', '1', '$target_file', '$added_on', '$updated_on')");
-                    if($insertSql){
-                        echo "<script>swal('Success', 'Data Added Successfully.', 'success').then(function() { window.location = 'categories.php'; });</script>";
+                if (is_uploaded_file($_FILES["category_image"]["tmp_name"])) {
+                    if (move_uploaded_file($_FILES["category_image"]["tmp_name"], $target_file)) {
+                        $insertSql = mysqli_query($conn,"INSERT INTO `categories`(`categories_name`, `categories_status`, `images`, `isDisplyHome`, `added_on`, `update_on`) VALUES ('$categories_name', '1', '$target_file', '$isDisplayHome', '$added_on', '$updated_on')");
+                        if($insertSql){
+                            ?>
+                            <script>swal('Success', 'Data Added Successfully.', 'success').then(function() { window.location = 'categories.php'; });</script>
+                            <?php
+                        } else {
+                           ?>
+                            <script>swal('Error', 'Something went wrong with the database.', 'error');</script>
+                            <?php
+                        }
                     } else {
-                        echo "<script>swal('Error', 'Something went wrong with the database.', 'error');</script>";
+                        ?>
+                        <script>swal('Error', 'There was an error uploading your file.', 'error');</script>
+                        <?php
                     }
                 } else {
-                    echo "<script>swal('Error', 'There was an error uploading your file.', 'error');</script>";
+                    ?>
+                    <script>swal('Error', 'Temporary file not found.', 'error');</script>
+                    <?php
                 }
             }
         }
@@ -90,6 +109,13 @@ if(isset($_POST['submit'])){
                                             <div class="invalid-feedback">
                                                 This is a required field.
                                             </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="bannerStatus">Is Display Home </label>
+                                            <input type="checkbox" id="bannerStatus" name="banner_status" value="active"> 
                                         </div>
                                     </div>
                                 </div>

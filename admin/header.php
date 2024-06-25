@@ -360,6 +360,8 @@ if (isset($_SESSION['Logindata']['email']) && $_SESSION['Logindata']['email'] !=
                             <li>
                                 <a href="index.php">
                                     <i class="bx bx-tachometer icon nav-icon"></i>
+
+                                    
                                     <span class="menu-item" data-key="t-dashboards">Dashboard</span>
                                     
                                 </a>
@@ -396,9 +398,9 @@ if (isset($_SESSION['Logindata']['email']) && $_SESSION['Logindata']['email'] !=
                             </li>
 
                             <li>
-                                <a href="apps-calendar.html">
-                                    <i class="bx bx-calendar icon nav-icon"></i>
-                                    <span class="menu-item" data-key="t-calendar">Calendar</span>
+                                <a href="banner.php">
+                                    <i class="bx bx-image-add"></i>
+                                    <span class="menu-item" data-key="t-calendar">Banner</span>
                                 </a>
                             </li>
 
@@ -470,7 +472,7 @@ if (isset($_SESSION['Logindata']['email']) && $_SESSION['Logindata']['email'] !=
 
                             <li>
                                 <a href="aboutus.php">
-                                    <i class="mdi mdi-application-settings"></i>
+                                    <i class="mdi mdi-human-greeting-proximity"></i>
                                     <span class="menu-item" data-key="t-calendar">About us</span>
                                 </a>
                             </li>
