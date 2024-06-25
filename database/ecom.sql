@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Jun 25, 2024 at 05:15 PM
+-- Generation Time: Jun 25, 2024 at 07:50 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -48,6 +48,21 @@ INSERT INTO `aboutus` (`about_us_id`, `about_us_logo`, `about_us_short_descripti
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `banner`
+--
+
+CREATE TABLE `banner` (
+  `banner_id` int(11) NOT NULL,
+  `banner_name` varchar(500) NOT NULL,
+  `banner_type` varchar(500) NOT NULL,
+  `banner_status` tinyint(4) NOT NULL,
+  `added_on` datetime NOT NULL,
+  `updated_on` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `categories`
 --
 
@@ -56,6 +71,7 @@ CREATE TABLE `categories` (
   `categories_name` varchar(500) NOT NULL,
   `images` varchar(10000) NOT NULL,
   `categories_status` tinyint(4) NOT NULL,
+  `isdisplayhome` tinyint(4) NOT NULL,
   `added_on` datetime NOT NULL,
   `update_on` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -64,9 +80,10 @@ CREATE TABLE `categories` (
 -- Dumping data for table `categories`
 --
 
-INSERT INTO `categories` (`categories_id`, `categories_name`, `images`, `categories_status`, `added_on`, `update_on`) VALUES
-(1, 'Man', '../media/avatar-1.jpg', 1, '2024-06-19 20:30:21', '2024-06-24 20:35:49'),
-(2, 'Women', 'avatar-1.jpg', 1, '2024-06-19 22:28:15', '2024-06-24 20:48:17');
+INSERT INTO `categories` (`categories_id`, `categories_name`, `images`, `categories_status`, `isdisplayhome`, `added_on`, `update_on`) VALUES
+(1, 'Man', '../media/avatar-1.jpg', 1, 1, '2024-06-19 20:30:21', '2024-06-24 20:35:49'),
+(2, 'Women', 'avatar-1.jpg', 1, 0, '2024-06-19 22:28:15', '2024-06-24 20:48:17'),
+(3, 'ABC', '../media/avatar-6.jpg', 1, 0, '2024-06-25 22:35:04', '2024-06-25 22:35:04');
 
 -- --------------------------------------------------------
 
@@ -163,6 +180,12 @@ ALTER TABLE `aboutus`
   ADD PRIMARY KEY (`about_us_id`);
 
 --
+-- Indexes for table `banner`
+--
+ALTER TABLE `banner`
+  ADD PRIMARY KEY (`banner_id`);
+
+--
 -- Indexes for table `categories`
 --
 ALTER TABLE `categories`
@@ -197,10 +220,16 @@ ALTER TABLE `aboutus`
   MODIFY `about_us_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
+-- AUTO_INCREMENT for table `banner`
+--
+ALTER TABLE `banner`
+  MODIFY `banner_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `categories_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `categories_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `sitesetting`
