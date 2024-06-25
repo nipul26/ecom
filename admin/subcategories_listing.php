@@ -98,6 +98,8 @@ if(isset($_GET['type']) && $_GET['type'] == 'subcategories' && isset($_GET['id']
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
 
 <script>
@@ -150,7 +152,17 @@ if(isset($_GET['type']) && $_GET['type'] == 'subcategories' && isset($_GET['id']
 
     // Function to delete subcategory
     function deleteSubCategory(id) {
-        if (confirm("Are you sure you want to delete this category?")) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'No, cancel!'
+    }).then((result) => {
+        if (result.isConfirmed) {
             $.ajax({
                 url: 'subcategories_delete.php',
                 type: 'POST',
@@ -158,7 +170,7 @@ if(isset($_GET['type']) && $_GET['type'] == 'subcategories' && isset($_GET['id']
                 success: function(response) {
                     var data = JSON.parse(response);
                     if (data.status == 'true') {
-                        swal({
+                        Swal.fire({
                             title: "Success",
                             text: "Category deleted successfully.",
                             icon: "success",
@@ -167,7 +179,7 @@ if(isset($_GET['type']) && $_GET['type'] == 'subcategories' && isset($_GET['id']
                             window.location = "categories.php";
                         });
                     } else {
-                        swal({
+                        Swal.fire({
                             title: "Error",
                             text: "Failed to delete category. Please try again.",
                             icon: "error",
@@ -176,7 +188,7 @@ if(isset($_GET['type']) && $_GET['type'] == 'subcategories' && isset($_GET['id']
                     }
                 },
                 error: function(xhr, status, error) {
-                    swal({
+                    Swal.fire({
                         title: "Error",
                         text: "An error occurred while processing your request.",
                         icon: "error",
@@ -185,7 +197,9 @@ if(isset($_GET['type']) && $_GET['type'] == 'subcategories' && isset($_GET['id']
                 }
             });
         }
-    }
+    });
+}
+
 </script>
 
 

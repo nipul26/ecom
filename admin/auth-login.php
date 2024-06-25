@@ -10,6 +10,8 @@
     <link href="assets/css/bootstrap.min.css" id="bootstrap-style" rel="stylesheet" type="text/css" />
     <link href="assets/css/icons.min.css" rel="stylesheet" type="text/css" />
     <link href="assets/css/app.min.css" id="app-style" rel="stylesheet" type="text/css" />
+    <!-- SweetAlert2 library -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body data-layout="horizontal" data-topbar="dark">
     <div class="authentication-bg min-vh-100">
@@ -43,7 +45,6 @@
         <button class="btn btn-primary w-sm waves-effect waves-light" type="submit" name="login">Log In</button>
     </div>
 </form>
-
                                 </div>
                             </div>
                         </div>
@@ -63,37 +64,43 @@
     <script src="assets/libs/metismenujs/metismenujs.min.js"></script>
     <script src="assets/libs/simplebar/simplebar.min.js"></script>
     <script src="assets/libs/feather-icons/feather.min.js"></script>
-</body>
 
+    <!-- Include SweetAlert2 library -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<?php
-session_start(); 
+    <?php
+    session_start(); 
+    include "config.inc.php";
 
-include "config.inc.php";
+    if (isset($_POST["login"])) {
+        $email = mysqli_real_escape_string($conn, $_POST['email']);
+        $password = md5(mysqli_real_escape_string($conn, $_POST['userpassword']));
 
-if (isset($_POST["login"])) {
-    $email = mysqli_real_escape_string($conn, $_POST['email']);
-    $password = md5(mysqli_real_escape_string($conn, $_POST['userpassword']));
+        $checkUserLogin = mysqli_query($conn, "SELECT * FROM user_login WHERE email = '$email' AND password = '$password'");
 
-    $checkUserLogin = mysqli_query($conn, "SELECT * FROM user_login WHERE email = '$email' AND password = '$password'");
-
-    if ($checkUserLogin) {
-        if (mysqli_num_rows($checkUserLogin) > 0) {
-            $_SESSION['Logindata'] = mysqli_fetch_assoc($checkUserLogin); 
-            header("Location: index.php");
-            exit();
+        if ($checkUserLogin) {
+            if (mysqli_num_rows($checkUserLogin) > 0) {
+                $_SESSION['Logindata'] = mysqli_fetch_assoc($checkUserLogin); 
+                header("Location: index.php");
+                exit();
+            } else { ?>
+                <script type='text/javascript'>
+                        Swal.fire({
+                            title: 'Error',
+                            text: 'Incorrect email or password. Please try again.',
+                            icon: 'error',
+                            confirmButtonText: 'Okay'
+                        }).then(function() {
+                            window.location = 'auth-login.php';
+                        });
+                      </script>
+                      <?php
+            }
         } else {
-            echo "<script type='text/javascript'>
-                    alert('Incorrect email or password. Please try again.');
-                    window.location.href = 'auth-login.php';
-                  </script>";
+            // Handle query execution error
+            echo "Error: " . mysqli_error($conn);
         }
-    } else {
-        // Handle query execution error
-        echo "Error: " . mysqli_error($conn);
     }
-}
-?>
-
-
+    ?>
+</body>
 </html>

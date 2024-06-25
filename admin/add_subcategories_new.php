@@ -6,6 +6,8 @@ include "header.php"; ?>
 
 <?php
 $categoryName = '';
+$categories_id = '';
+
 if (isset($_GET['categories_id'])) {
     $categories_id = $_GET['categories_id'];
     $categoryQuery = mysqli_query($conn, "SELECT categories_name FROM categories WHERE categories_id = '$categories_id'");
@@ -13,28 +15,22 @@ if (isset($_GET['categories_id'])) {
     if ($categoryData) {
         $categoryName = $categoryData['categories_name'];
     } else { ?>
-        <script>swal('Error', 'Invalid category ID.', 'error').then(function() {x
-            window.location = 'categories.php';
+        <script>swal('Error', 'Invalid category ID.', 'error').then(function() {
+            window.location = 'SidemenuSubcategories.php';
         });</script>
         <?php
         exit;
     }
-} else { ?>
-    <script>swal('Error', 'Category ID is required.', 'error').then(function() {
-        window.location = 'categories.php';
-    });</script>
-    <?php
-    exit;
 }
 
 if (isset($_POST['submit'])) {
+    $categories_id = $_POST['categories_id'];
     $categories_name = mysqli_real_escape_string($conn, $_POST['categories_name']);
     $added_on = date('Y-m-d H:i:s');
     $updated_on = date('Y-m-d H:i:s');
 
     if (!preg_match('/^[a-zA-Z][a-zA-Z0-9_]*$/', $categories_name)) { ?>
         <script>swal('Error', 'Category name must start with alphabets and cannot contain spaces or special characters at the beginning.', 'error');</script>
-
         <?php
     } else {
         // Check if the subcategory already exists for the given category
@@ -99,8 +95,11 @@ if (isset($_POST['submit'])) {
                                 $uploadOk = 0;
                                 break;
                             }
-                        } else { ?>
-                            <script>swal('Error', 'Failed to move file to destination folder.', 'error');</script>
+                        } else {
+                            $error = error_get_last();
+                            $errorMessage = $error['message'];
+                            ?>
+                            <script>swal('Error', 'Failed to move file to destination folder. <?php echo $errorMessage; ?>', 'error');</script>
                             <?php
                             $uploadOk = 0;
                             break;
@@ -137,7 +136,15 @@ if (isset($_POST['submit'])) {
                                     <div class="col-md-12">
                                         <div class="mb-3">
                                             <label class="form-label" for="category_name">Category Name</label>
-                                            <div class="form-control" id="category_name" readonly><?php echo $categoryName; ?></div>
+                                            <select class="form-control" id="category_name" name="categories_id" required>
+                                                <option value="">Select Category</option>
+                                                <?php
+                                                $categoriesQuery = mysqli_query($conn, "SELECT categories_id, categories_name FROM categories");
+                                                while ($row = mysqli_fetch_assoc($categoriesQuery)) { ?>
+                                                    <option value="<?php echo $row['categories_id']; ?>" <?php echo ($row['categories_id'] == $categories_id) ? 'selected' : ''; ?>><?php echo $row['categories_name']; ?></option>
+                                                <?php } ?>
+                                            </select>
+                                            <div class="invalid-feedback">This is a required field.</div>
                                         </div>
                                     </div>
                                     <div class="col-md-12">

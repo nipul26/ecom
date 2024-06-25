@@ -17,6 +17,8 @@ if($_GET['type'] == 'edit' && $_GET['id'] != ''){
     $currentImage = $getData['sub_categories_images'];
 
     if(isset($_POST['submit'])) {
+
+
         $newCategoryName = mysqli_real_escape_string($conn, $_POST['category_name']);
         $newCategoryId = mysqli_real_escape_string($conn, $_POST['category_id']);
         
@@ -24,7 +26,7 @@ if($_GET['type'] == 'edit' && $_GET['id'] != ''){
         $image = $currentImage; // Default to current image
         if ($_FILES['subcategory_image']['name'] != '') {
             $image = $_FILES['subcategory_image']['name'];
-            $target = "upload/" . basename($image); // Adjust path as needed
+            $target =  basename($image); 
             move_uploaded_file($_FILES['subcategory_image']['tmp_name'], $target);
         }
 
@@ -75,12 +77,11 @@ if($_GET['type'] == 'edit' && $_GET['id'] != ''){
 } else {
     ?>
     <script type="text/javascript">
-        window.location.href = 'categories.php';
+        window.location.href = 'subcategories_listing.php';
     </script>
     <?php
 }
 ?>
-<?php include "header.php"; ?>
 
 <div class="main-content">
     <div class="page-content">
@@ -128,6 +129,7 @@ if($_GET['type'] == 'edit' && $_GET['id'] != ''){
                                         <div class="mb-3">
                                             <label class="form-label" for="image">Sub Category Image</label>
                                             <input type="file" class="form-control" id="image" name="subcategory_image">
+                                            <img src="../media/<?php echo $currentImage; ?>" style="height: 100px; width: 100px;"></img>
                                             <div class="invalid-feedback">
                                                 Please choose an image file.
                                             </div>
