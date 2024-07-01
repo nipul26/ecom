@@ -138,7 +138,7 @@
                             icon: 'success',
                             confirmButtonText: 'Okay'
                         }).then(function() {
-                            window.location = "index.php";
+                            window.location = "SidemenuSubcategories.php";
                         });
                     } else {
                         Swal.fire({

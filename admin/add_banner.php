@@ -1,7 +1,7 @@
 <?php include "header.php"; ?>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <?php 
 if(isset($_POST['submit'])){
@@ -12,29 +12,34 @@ if(isset($_POST['submit'])){
     $updated_on = date('Y-m-d H:i:s');
 
     if(!preg_match('/^[a-zA-Z][a-zA-Z0-9_]*$/', $banner_name)){ ?>
-        <script>swal('Error', 'Banner name must start with alphabets and cannot contain spaces or special characters at the beginning.', 'error');</script>
+        <script>
+        Swal.fire('Error', 'Banner name must start with alphabets and cannot contain spaces or special characters at the beginning.', 'error');
+        </script>
         <?php
     } else {
-       
         $checkSql = mysqli_query($conn,"SELECT * FROM banner WHERE banner_name = '$banner_name' AND banner_type = '$banner_type'");
         if(mysqli_num_rows($checkSql) > 0){ ?>
-            <script>swal('Error', 'Banner with the same name and type already exists.', 'error');</script>
+            <script>
+            Swal.fire('Error', 'Banner with the same name and type already exists.', 'error');
+            </script>
             <?php
         } else {
             $insertSql = mysqli_query($conn,"INSERT INTO `banner`(`banner_name`, `banner_type`, `banner_status`, `added_on`, `updated_on`) VALUES ('$banner_name', '$banner_type', '$banner_status', '$added_on', '$updated_on')");
             if($insertSql){
                 ?>
-                <script>swal('Success', 'Banner Added Successfully.', 'success').then(function() { window.location = 'banner.php'; });</script>
+                <script>
+                Swal.fire('Success', 'Banner Added Successfully.', 'success').then(function() { window.location = 'banner.php'; });
+                </script>
                 <?php
             } else { 
                 ?>
-                <script>swal('Error', 'Something went wrong with the database.', 'error');</script>
+                <script>
+                Swal.fire('Error', 'Something went wrong with the database.', 'error');
+                </script>
                 <?php
             }
         }
     }
-
-   
 }
 ?>
 
@@ -52,15 +57,6 @@ if(isset($_POST['submit'])){
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="mb-3">
-                                            <label class="form-label" for="bannerName">Banner Name</label>
-                                            <input type="text" class="form-control" id="bannerName" placeholder="Enter Banner Name" name="banner_name" required>
-                                            <div class="invalid-feedback">
-                                                This is a required field.
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="mb-3">
                                             <label class="form-label" for="bannerType">Banner Type</label>
                                             <select class="form-control" id="bannerType" name="banner_type" required>
                                                 <option value="">Select Type</option>
@@ -73,6 +69,17 @@ if(isset($_POST['submit'])){
                                             </div>
                                         </div>
                                     </div>
+
+                                    <div class="col-md-12">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="bannerName">Banner Name</label>
+                                            <input type="text" class="form-control" id="bannerName" placeholder="Enter Banner Name" name="banner_name" required>
+                                            <div class="invalid-feedback">
+                                                This is a required field.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
                                     <div class="col-md-12">
                                         <div class="mb-3">
                                             <label class="form-label" for="bannerStatus">Banner Status</label><br>
@@ -93,14 +100,17 @@ if(isset($_POST['submit'])){
 
 <script>
 $(document).ready(function() {
-    // Validate that banner name starts with alphabets
     $("form").on("submit", function(e) {
         var bannerName = $("#bannerName").val();
+        var bannerType = $("#bannerType").val();
         var regex = /^[A-Za-z]/;
         
         if (!regex.test(bannerName)) {
             e.preventDefault();
-            swal("Validation Error", "Banner Name must start with an alphabet.", "error");
+            Swal.fire("Validation Error", "Banner Name must start with an alphabet.", "error");
+        } else if (bannerType === "") {
+            e.preventDefault();
+            Swal.fire("Validation Error", "Banner Type is required.", "error");
         }
     });
 });

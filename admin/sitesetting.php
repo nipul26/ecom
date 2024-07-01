@@ -19,6 +19,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $instagramLink = $_POST['instagram_link'];
     $facebookLink = $_POST['facebook_link'];
     $twitterLink = $_POST['twitter_link'];
+    $youtubeLink = $_POST['youtube_link'];
     $googleLink = $_POST['google_link'];
     $googleMapLink = $_POST['google_map_link'];
 
@@ -78,6 +79,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             instagram_link = '$instagramLink',
             facebook_link = '$facebookLink',
             twitter_link = '$twitterLink',
+            youtube_link = '$youtubeLink',
             google_link = '$googleLink',
             google_map_link = '$googleMapLink',
             update_on = '$updated_on'
@@ -99,9 +101,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     } else {
         $sqlInsert = "INSERT INTO sitesetting 
-            (id, site_name, site_tag_name, mobile_number, whatsapp_number, frist_email, second_email, address, header_site_logo, footer_site_logo, meta_title, meta_keyword, meta_description, instagram_link, facebook_link, twitter_link, google_link, google_map_link, added_on, update_on) 
+            (id, site_name, site_tag_name, mobile_number, whatsapp_number, frist_email, second_email, address, header_site_logo, footer_site_logo, meta_title, meta_keyword, meta_description, instagram_link, facebook_link, twitter_link,youtube_link, google_link, google_map_link, added_on, update_on) 
             VALUES 
-            (1, '$siteName', '$siteTagName', '$mobileNumber', '$whatsappNumber', '$firstEmail', '$secondEmail', '$address', '$headerSiteLogoName', '$footerSiteLogoName', '$metaTitle', '$metaKeyword', '$metaDescription', '$instagramLink', '$facebookLink', '$twitterLink', '$googleLink', '$googleMapLink', '$added_on', '$updated_on')";
+            (1, '$siteName', '$siteTagName', '$mobileNumber', '$whatsappNumber', '$firstEmail', '$secondEmail', '$address', '$headerSiteLogoName', '$footerSiteLogoName', '$metaTitle', '$metaKeyword', '$metaDescription', '$instagramLink', '$facebookLink', '$twitterLink','$youtubeLink', '$googleLink', '$googleMapLink', '$added_on', '$updated_on')";
 
         if (mysqli_query($conn, $sqlInsert)) { ?>
             <script>
@@ -257,6 +259,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                         <div class="mb-3">
                                             <label class="form-label" for="twitterLink">Twitter Link</label>
                                             <input type="url" class="form-control" id="twitterLink" placeholder="Enter Twitter link" name="twitter_link" value="<?php echo ($row['twitter_link']); ?>">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="youtubelink">Youtube Link</label>
+                                            <input type="url" class="form-control" id="youtubelink" placeholder="Enter youtube link" name="youtube_link" value="<?php echo ($row['youtube_link']); ?>">
                                         </div>
                                     </div>
                                     <div class="col-md-12">

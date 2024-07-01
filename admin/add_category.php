@@ -5,7 +5,11 @@
 
 <?php 
 if(isset($_POST['submit'])){
+
     $categories_name = mysqli_real_escape_string($conn, $_POST['categories_name']);
+    $meta_title = mysqli_real_escape_string($conn, $_POST['meta_title']);
+    $meta_keyword = mysqli_real_escape_string($conn, $_POST['meta_keyword']);
+    $meta_description = mysqli_real_escape_string($conn, $_POST['meta_description']);
     $added_on = date('Y-m-d H:i:s');
     $updated_on = date('Y-m-d H:i:s');
     $isDisplayHome = isset($_POST['banner_status']) ? 1 : 0;
@@ -55,7 +59,9 @@ if(isset($_POST['submit'])){
             } else {
                 if (is_uploaded_file($_FILES["category_image"]["tmp_name"])) {
                     if (move_uploaded_file($_FILES["category_image"]["tmp_name"], $target_file)) {
-                        $insertSql = mysqli_query($conn,"INSERT INTO `categories`(`categories_name`, `categories_status`, `images`, `isDisplyHome`, `added_on`, `update_on`) VALUES ('$categories_name', '1', '$target_file', '$isDisplayHome', '$added_on', '$updated_on')");
+                        // Store only the image name in the database
+                        $image_name = basename($_FILES["category_image"]["name"]);
+                        $insertSql = mysqli_query($conn,"INSERT INTO `categories`(`categories_name`, `categories_status`, `images`, `isdisplayhome`, `meta_title`, `meta_keyword`, `meta_description`, `added_on`, `update_on`) VALUES ('$categories_name', '1', '$image_name', '$isDisplayHome', '$meta_title', '$meta_keyword', '$meta_description', '$added_on', '$updated_on')");
                         if($insertSql){
                             ?>
                             <script>swal('Success', 'Data Added Successfully.', 'success').then(function() { window.location = 'categories.php'; });</script>
@@ -118,6 +124,34 @@ if(isset($_POST['submit'])){
                                             <input type="checkbox" id="bannerStatus" name="banner_status" value="active"> 
                                         </div>
                                     </div>
+                                    <div class="col-md-12">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="meta_title">Meta Title</label>
+                                            <input type="text" class="form-control" id="meta_title" placeholder="Enter Meta Title" name="meta_title" required>
+                                            <div class="invalid-feedback">
+                                                This is a required field.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="meta_keyword">Meta Keyword</label>
+                                            <input type="text" class="form-control" id="meta_keyword" placeholder="Enter Meta Keyword" name="meta_keyword" required>
+                                            <div class="invalid-feedback">
+                                                This is a required field.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="meta_description">Meta Description</label>
+                                            <input type="text" class="form-control" id="meta_description" placeholder="Enter Meta Description" name="meta_description" required>
+                                            <div class="invalid-feedback">
+                                                This is a required field.
+                                            </div>
+                                        </div>
+                                    </div>
+
                                 </div>
                                 <a href="categories.php" class="btn btn-primary" style="color:white;">Back</a>
                                 <button class="btn btn-success" name="submit" type="submit">Save</button>

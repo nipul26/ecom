@@ -18,15 +18,14 @@ if($_GET['type'] == 'edit' && $_GET['id'] != ''){
 
     if(isset($_POST['submit'])) {
 
-
         $newCategoryName = mysqli_real_escape_string($conn, $_POST['category_name']);
         $newCategoryId = mysqli_real_escape_string($conn, $_POST['category_id']);
         
         // Image handling
         $image = $currentImage; // Default to current image
         if ($_FILES['subcategory_image']['name'] != '') {
-            $image = $_FILES['subcategory_image']['name'];
-            $target =  basename($image); 
+            $image = basename($_FILES['subcategory_image']['name']); // Use basename to get only the file name
+            $target = "../media/" . $image; 
             move_uploaded_file($_FILES['subcategory_image']['tmp_name'], $target);
         }
 

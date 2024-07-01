@@ -397,6 +397,13 @@ if (isset($_SESSION['Logindata']['email']) && $_SESSION['Logindata']['email'] !=
                                 </ul>
                             </li>
 
+                             <li>
+                                <a href="product_listing.php">
+                                    <i class="bx bxl-product-hunt"></i>
+                                    <span class="menu-item" data-key="t-calendar">Product</span>
+                                </a>
+                            </li>
+
                             <li>
                                 <a href="banner.php">
                                     <i class="bx bx-image-add"></i>

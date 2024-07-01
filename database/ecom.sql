@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Jun 25, 2024 at 07:50 PM
+-- Generation Time: Jul 01, 2024 at 06:15 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -38,13 +38,6 @@ CREATE TABLE `aboutus` (
   `about_us_video_description` varchar(1000) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `aboutus`
---
-
-INSERT INTO `aboutus` (`about_us_id`, `about_us_logo`, `about_us_short_description`, `about_us_long_description`, `about_us_main_img`, `about_us_video_images`, `about_us_video`, `about_us_video_description`) VALUES
-(1, '', 'sdfghjkl;\'kjhg', 'fghjkljhgvb', 'avatar-6.jpg', 'avatar-1.jpg', 'file_example_MP4_640_3MG.mp4', 'fghjkl;\'lkjhg');
-
 -- --------------------------------------------------------
 
 --
@@ -72,18 +65,51 @@ CREATE TABLE `categories` (
   `images` varchar(10000) NOT NULL,
   `categories_status` tinyint(4) NOT NULL,
   `isdisplayhome` tinyint(4) NOT NULL,
+  `meta_title` varchar(500) NOT NULL,
+  `meta_keyword` varchar(500) NOT NULL,
+  `meta_description` varchar(500) NOT NULL,
   `added_on` datetime NOT NULL,
   `update_on` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- --------------------------------------------------------
+
 --
--- Dumping data for table `categories`
+-- Table structure for table `products`
 --
 
-INSERT INTO `categories` (`categories_id`, `categories_name`, `images`, `categories_status`, `isdisplayhome`, `added_on`, `update_on`) VALUES
-(1, 'Man', '../media/avatar-1.jpg', 1, 1, '2024-06-19 20:30:21', '2024-06-24 20:35:49'),
-(2, 'Women', 'avatar-1.jpg', 1, 0, '2024-06-19 22:28:15', '2024-06-24 20:48:17'),
-(3, 'ABC', '../media/avatar-6.jpg', 1, 0, '2024-06-25 22:35:04', '2024-06-25 22:35:04');
+CREATE TABLE `products` (
+  `product_id` int(11) NOT NULL,
+  `product_name` varchar(500) NOT NULL,
+  `sku` varchar(500) NOT NULL,
+  `mrp_price` decimal(10,2) NOT NULL,
+  `special_price` decimal(10,2) NOT NULL,
+  `product_main_image` varchar(500) NOT NULL,
+  `product_description` text NOT NULL,
+  `product_availble_status` varchar(500) NOT NULL,
+  `related_products_id` varchar(500) NOT NULL,
+  `product_status` tinyint(4) NOT NULL,
+  `isdisplayhome` tinyint(4) NOT NULL,
+  `meta_title` varchar(500) NOT NULL,
+  `meta_keyword` varchar(500) NOT NULL,
+  `meta_description` varchar(500) NOT NULL,
+  `added_on` datetime NOT NULL,
+  `updated_on` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `product_multiple_images`
+--
+
+CREATE TABLE `product_multiple_images` (
+  `product_images_id` int(11) NOT NULL,
+  `product_main_id` int(11) DEFAULT NULL,
+  `product_image` varchar(1000) NOT NULL,
+  `added_on` datetime NOT NULL,
+  `update_on` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -108,6 +134,7 @@ CREATE TABLE `sitesetting` (
   `instagram_link` varchar(500) NOT NULL,
   `facebook_link` varchar(500) NOT NULL,
   `twitter_link` varchar(500) NOT NULL,
+  `youtube_link` varchar(500) NOT NULL,
   `google_link` varchar(500) NOT NULL,
   `google_map_link` varchar(500) NOT NULL,
   `added_on` datetime NOT NULL,
@@ -118,8 +145,8 @@ CREATE TABLE `sitesetting` (
 -- Dumping data for table `sitesetting`
 --
 
-INSERT INTO `sitesetting` (`id`, `site_name`, `site_tag_name`, `mobile_number`, `whatsapp_number`, `frist_email`, `second_email`, `address`, `header_site_logo`, `footer_site_logo`, `meta_title`, `meta_keyword`, `meta_description`, `instagram_link`, `facebook_link`, `twitter_link`, `google_link`, `google_map_link`, `added_on`, `update_on`) VALUES
-(1, 'abc1234', 'abc1', '9876543210', '9876543210', 'abc@gmail.com', 'abc@gmail.com', 'adfgasdgadg', 'avatar-6.jpg', 'avatar-6.jpg', 'asdgsdfg', 'aseasdg', 'asdfasdfasdf', 'https://instagram.com', 'https://facebook.com', 'https://twitter.com', 'https://google.com', 'htttps://google.map.com', '2024-06-20 18:27:07', '2024-06-24 22:48:16');
+INSERT INTO `sitesetting` (`id`, `site_name`, `site_tag_name`, `mobile_number`, `whatsapp_number`, `frist_email`, `second_email`, `address`, `header_site_logo`, `footer_site_logo`, `meta_title`, `meta_keyword`, `meta_description`, `instagram_link`, `facebook_link`, `twitter_link`, `youtube_link`, `google_link`, `google_map_link`, `added_on`, `update_on`) VALUES
+(1, 'abc', 'abc', '9876543210', '9876543210', 'meghana@gmail.com', 'meghana@gmail.com', '1234', 'avatar-1.jpg', 'avatar-1.jpg', 'abc', 'abc`', 'abc', 'https://instagram.com', 'https://facebook.com', 'https://twitter.com', 'https://youtube.com', 'https://google.com', 'https://google.com', '2024-06-29 15:24:47', '2024-06-29 15:24:47');
 
 -- --------------------------------------------------------
 
@@ -133,17 +160,12 @@ CREATE TABLE `subcategories` (
   `sub_categories_name` varchar(500) NOT NULL,
   `sub_categories_images` varchar(10000) NOT NULL,
   `status` tinyint(4) NOT NULL,
+  `meta_title` varchar(500) NOT NULL,
+  `meta_keyword` varchar(500) NOT NULL,
+  `meta_description` varchar(500) NOT NULL,
   `added_on` datetime NOT NULL,
   `update_on` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `subcategories`
---
-
-INSERT INTO `subcategories` (`sub_categories_id`, `categories_id`, `sub_categories_name`, `sub_categories_images`, `status`, `added_on`, `update_on`) VALUES
-(1, 2, 'women_new', '', 1, '2024-06-24 23:16:17', '2024-06-24 23:16:17'),
-(2, 2, 'w1', '../media/subcategories/avatar-1.jpg', 1, '2024-06-24 23:17:04', '2024-06-24 23:17:04');
 
 -- --------------------------------------------------------
 
@@ -167,7 +189,7 @@ CREATE TABLE `user_login` (
 --
 
 INSERT INTO `user_login` (`id`, `username`, `email`, `password`, `mobile_no`, `wp_mobile_no`, `added_on`, `update_on`) VALUES
-(1, 'Meghana', 'meghana@gmail.com', 'e10adc3949ba59abbe56e057f20f883e', '8160598689', '8160598689', '2024-06-18 10:36:22', '2024-06-18 10:36:22');
+(1, 'meghana', 'meghana@gmail.com', 'e10adc3949ba59abbe56e057f20f883e', '9876543210', '9876543210', '2024-06-29 11:36:39', '2024-06-29 11:36:39');
 
 --
 -- Indexes for dumped tables
@@ -190,6 +212,18 @@ ALTER TABLE `banner`
 --
 ALTER TABLE `categories`
   ADD PRIMARY KEY (`categories_id`);
+
+--
+-- Indexes for table `products`
+--
+ALTER TABLE `products`
+  ADD PRIMARY KEY (`product_id`);
+
+--
+-- Indexes for table `product_multiple_images`
+--
+ALTER TABLE `product_multiple_images`
+  ADD PRIMARY KEY (`product_images_id`);
 
 --
 -- Indexes for table `sitesetting`
@@ -217,19 +251,31 @@ ALTER TABLE `user_login`
 -- AUTO_INCREMENT for table `aboutus`
 --
 ALTER TABLE `aboutus`
-  MODIFY `about_us_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `about_us_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `banner`
 --
 ALTER TABLE `banner`
-  MODIFY `banner_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `banner_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `categories_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `categories_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `products`
+--
+ALTER TABLE `products`
+  MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `product_multiple_images`
+--
+ALTER TABLE `product_multiple_images`
+  MODIFY `product_images_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `sitesetting`
@@ -241,7 +287,7 @@ ALTER TABLE `sitesetting`
 -- AUTO_INCREMENT for table `subcategories`
 --
 ALTER TABLE `subcategories`
-  MODIFY `sub_categories_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `sub_categories_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `user_login`

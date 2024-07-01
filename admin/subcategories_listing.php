@@ -12,7 +12,7 @@ if(isset($_GET['type']) && $_GET['type'] == 'subcategories' && isset($_GET['id']
         window.location.href = 'categories.php';
     </script>
     <?php
-    exit; // Exit script to prevent further execution
+    exit;
 }
 ?> 
 
@@ -59,7 +59,7 @@ if(isset($_GET['type']) && $_GET['type'] == 'subcategories' && isset($_GET['id']
                            <tr>
                               <td style="border-right: 0.3px solid black;"><?php echo $listData['sub_categories_id']; ?></td>
                               <td style="border-right: 0.3px solid grey;"><?php echo $listData['sub_categories_name']; ?></td>
-                              <td><img src="<?php echo $listData['sub_categories_images']; ?>" style="height: 50px; width: 50px;"></td>
+                              <td><img src="../media/subcategories/<?php echo $listData['sub_categories_images']; ?>" style="height: 50px; width: 50px;"></td>
                               <td style="border-right: 0.3px solid grey;"><?php echo $listData['added_on']; ?></td>
                               <td style="border-right: 0.3px solid grey;"><?php echo $listData['update_on']; ?></td>
                               <td style="border-right: 0.3px solid grey;">
@@ -150,7 +150,6 @@ if(isset($_GET['type']) && $_GET['type'] == 'subcategories' && isset($_GET['id']
         });
     }
 
-    // Function to delete subcategory
     function deleteSubCategory(id) {
     Swal.fire({
         title: 'Are you sure?',

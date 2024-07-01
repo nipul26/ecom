@@ -26,6 +26,9 @@ if (isset($_GET['categories_id'])) {
 if (isset($_POST['submit'])) {
     $categories_id = $_POST['categories_id'];
     $categories_name = mysqli_real_escape_string($conn, $_POST['categories_name']);
+    $meta_title = mysqli_real_escape_string($conn, $_POST['meta_title']);
+    $meta_keyword = mysqli_real_escape_string($conn, $_POST['meta_keyword']);
+    $meta_description = mysqli_real_escape_string($conn, $_POST['meta_description']);
     $added_on = date('Y-m-d H:i:s');
     $updated_on = date('Y-m-d H:i:s');
 
@@ -39,7 +42,7 @@ if (isset($_POST['submit'])) {
             <script>swal('Error', 'Subcategory name already exists.', 'error');</script>
             <?php
         } else {
-            $insertSql = mysqli_query($conn, "INSERT INTO `subcategories`(`categories_id`, `sub_categories_name`, `sub_categories_images`, `status`, `added_on`, `update_on`) VALUES ('$categories_id', '$categories_name', '', '1', '$added_on', '$updated_on')");
+            $insertSql = mysqli_query($conn, "INSERT INTO `subcategories`(`categories_id`, `sub_categories_name`, `sub_categories_images`, `meta_title`, `meta_keyword`, `meta_description`, `status`, `added_on`, `update_on`) VALUES ('$categories_id', '$categories_name', '', '$meta_title', '$meta_keyword', '$meta_description', '1', '$added_on', '$updated_on')");
             if ($insertSql) {
                 $sub_categories_id = mysqli_insert_id($conn);
                 $uploadOk = 1;
@@ -50,18 +53,19 @@ if (isset($_POST['submit'])) {
                 }
 
                 foreach ($_FILES['category_images']['name'] as $key => $val) {
-                    $target_file = $target_dir . basename($_FILES['category_images']['name'][$key]);
+                    $filename = basename($_FILES['category_images']['name'][$key]);
+                    $target_file = $target_dir . $filename;
                     $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
                     $check = getimagesize($_FILES['category_images']['tmp_name'][$key]);
 
                     if ($check === false) { ?>
-                        <script>swal('Error', 'File "<?php echo basename($_FILES['category_images']['name'][$key]); ?>" is not an image.', 'error');</script>
+                        <script>swal('Error', 'File "<?php echo $filename; ?>" is not an image.', 'error');</script>
                         <?php
                         $uploadOk = 0;
                         break;
                     }
                     if ($_FILES['category_images']['size'][$key] > 5000000) { ?>
-                        <script>swal('Error', 'File "<?php echo basename($_FILES['category_images']['name'][$key]); ?>" is too large.', 'error');</script>
+                        <script>swal('Error', 'File "<?php echo $filename; ?>" is too large.', 'error');</script>
                         <?php
                         $uploadOk = 0;
                         break;
@@ -83,9 +87,9 @@ if (isset($_POST['submit'])) {
                                 if (!empty($current_images)) {
                                     $current_images .= ',';
                                 }
-                                $current_images .= $target_file;
+                                $current_images .= $filename;
                             } else {
-                                $current_images = $target_file;
+                                $current_images = $filename;
                             }
 
                             $updateImagesSql = mysqli_query($conn, "UPDATE subcategories SET sub_categories_images = '$current_images' WHERE sub_categories_id = '$sub_categories_id'");
@@ -109,7 +113,7 @@ if (isset($_POST['submit'])) {
 
                 if ($uploadOk == 1) { ?>
                     <script>
-                    swal('Success', 'Data Added Successfully.', 'success').then(function() { window.location = 'subcategories_listing.php'; });</script>
+                    swal('Success', 'Data Added Successfully.', 'success').then(function() { window.location = 'SidemenuSubcategories.php'; });</script>
                     <?php
                 }
             } else { ?>
@@ -156,13 +160,34 @@ if (isset($_POST['submit'])) {
                                     </div>
                                     <div class="col-md-12">
                                         <div class="mb-3">
+                                            <label class="form-label" for="meta_title">Meta Title</label>
+                                            <input type="text" class="form-control" id="meta_title" placeholder="Enter Meta Title" name="meta_title" required>
+                                            <div class="invalid-feedback">This is a required field.</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="meta_keyword">Meta Keyword</label>
+                                            <input type="text" class="form-control" id="meta_keyword" placeholder="Enter Meta Keyword" name="meta_keyword" required>
+                                            <div class="invalid-feedback">This is a required field.</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="meta_description">Meta Description</label>
+                                            <textarea class="form-control" id="meta_description" placeholder="Enter Meta Description" name="meta_description" required></textarea>
+                                            <div class="invalid-feedback">This is a required field.</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="mb-3">
                                             <label class="form-label" for="validationCustom04">Sub Category Images</label>
                                             <input type="file" class="form-control" id="validationCustom04" name="category_images[]" multiple required>
                                             <div class="invalid-feedback">This is a required field.</div>
                                         </div>
                                     </div>
                                 </div>
-                                <a href="categories.php" class="btn btn-primary" style="color:white;">Back</a>
+                                <a href="SidemenuSubcategories.php" class="btn btn-primary" style="color:white;">Back</a>
                                 <button class="btn btn-success" name="submit" type="submit">Save</button>
                             </form>
                         </div>
