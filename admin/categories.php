@@ -2,6 +2,7 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <div class="main-content">
    <div class="page-content">
@@ -35,6 +36,7 @@
                               <th style="border-right: 0.3px solid grey;">Added Date</th>
                               <th style="border-right: 0.3px solid grey;">Update Date</th>
                               <th style="border-right: 0.3px solid grey;">Status</th>
+                               <th style="border-right: 0.3px solid grey;">Display Home</th>
                               <th>Action</th>
                            </tr>
                         </thead>
@@ -48,19 +50,29 @@
                            <tr>
                               <td style="border-right: 0.3px solid black;"><?php echo $listData['categories_id']; ?></td>
                               <td style="border-right: 0.3px solid grey;"><?php echo $listData['categories_name']; ?></td>
-                              <td><img src="<?php echo $listData['images']; ?>" style="height: 50px; width: 50px;"></td>
+                              <td><img src="../media/<?php echo $listData['images']; ?>" style="height: 50px; width: 50px;"></td>
                          
                               <td style="border-right: 0.3px solid grey;"><?php echo $listData['added_on']; ?></td>
                               <td style="border-right: 0.3px solid grey;"><?php echo $listData['update_on']; ?></td>
-                              <td style="border-right: 0.3px solid grey;">
-                                 <div class="square-switch">
-                                    <?php 
-                                    $checked = $listData["categories_status"] == 1 ? 'checked' : '';
-                                    ?>
-                                    <input type="checkbox" id="square-switch<?php echo $listData['categories_id']; ?>" switch="bool" <?php echo $checked; ?> onclick="changeStatus(<?php echo $listData['categories_id']; ?>);" />
-                                    <label for="square-switch<?php echo $listData['categories_id']; ?>" data-on-label="Yes" data-off-label="No"></label>
-                                 </div>
-                              </td>
+<td style="border-right: 0.3px solid grey;">
+    <div class="square-switch">
+        <?php 
+        $checked = $listData["categories_status"] == 1 ? 'checked' : '';
+        ?>
+        <input type="checkbox" id="categories-switch<?php echo $listData['categories_id']; ?>" switch="bool" <?php echo $checked; ?> onclick="changeStatus(<?php echo $listData['categories_id']; ?>);" />
+        <label for="categories-switch<?php echo $listData['categories_id']; ?>" data-on-label="Yes" data-off-label="No"></label>
+    </div>
+</td>
+<td style="border-right: 0.3px solid grey;">
+    <div class="square-switch">
+        <?php 
+        $checked = $listData["isdisplayhome"] == 1 ? 'checked' : '';
+        ?>
+        <input type="checkbox" id="displayhome-switch<?php echo $listData['categories_id']; ?>" switch="bool" <?php echo $checked; ?> onclick="displayHome(<?php echo $listData['categories_id']; ?>);" />
+        <label for="displayhome-switch<?php echo $listData['categories_id']; ?>" data-on-label="Yes" data-off-label="No"></label>
+    </div>
+</td>
+
                               <td>
                                  <div class="table-btn-actions">
                                     <button type="button" class="btn btn-success">
@@ -98,6 +110,29 @@
        window.location.href = 'add_category.php';
    }
 
+
+function displayHome(id) {
+    $.ajax({
+        url: 'update_isdisplay.php',
+        type: 'POST',
+        data: { id: id },
+        success: function(response) {
+            var statusRes = JSON.parse(response);
+            if(statusRes.status=='true'){
+                alertify.set('notifier','position', 'top-right');
+                alertify.success("Is Display Status Update Successfully.");
+            }
+            if(statusRes.status=='false'){
+                alertify.set('notifier','position', 'top-right');
+                alertify.error("Something Went Wrong.Please Try Again.");
+            }
+        },
+        error: function(xhr, status, error) {
+            alertify.error(error);
+        }
+    });
+}
+
    function changeStatus(id) {
        $.ajax({
            url: 'update_category_status.php',
@@ -120,43 +155,55 @@
        });
    }
 
- function deleteCategory(id) {
-    if (confirm("Are you sure you want to delete this category?")) {
-        $.ajax({
-            url: 'delete_category.php',
-            type: 'POST',
-            data: { id: id },
-            success: function(response) {
-                var data = JSON.parse(response);
-                if (data.status == 'true') {
-                    swal({
-                        title: "Success",
-                        text: "Category deleted successfully.",
-                        icon: "success",
-                        button: "Okay",
-                    }).then(function() {
-                        window.location = "categories.php";
-                    });
-                } else {
-                    swal({
+function deleteCategory(id) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'No, cancel!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: 'delete_category.php',
+                type: 'POST',
+                data: { id: id },
+                success: function(response) {
+                    var data = JSON.parse(response);
+                    if (data.status == 'true') {
+                        Swal.fire({
+                            title: "Success",
+                            text: "Category deleted successfully.",
+                            icon: "success",
+                            button: "Okay",
+                        }).then(function() {
+                            window.location = "categories.php";
+                        });
+                    } else {
+                        Swal.fire({
+                            title: "Error",
+                            text: "Failed to delete category. Please try again.",
+                            icon: "error",
+                            button: "Okay",
+                        });
+                    }
+                },
+                error: function(xhr, status, error) {
+                    Swal.fire({
                         title: "Error",
-                        text: "Failed to delete category. Please try again.",
+                        text: "An error occurred while processing your request.",
                         icon: "error",
                         button: "Okay",
                     });
                 }
-            },
-            error: function(xhr, status, error) {
-                swal({
-                    title: "Error",
-                    text: "An error occurred while processing your request.",
-                    icon: "error",
-                    button: "Okay",
-                });
-            }
-        });
-    }
+            });
+        }
+    });
 }
+
 </script>
 
 <!-- DataTables CSS and JS -->
