@@ -1,3 +1,8 @@
+<?php
+
+include 'admin/config.inc.php';
+?>
+
 <!DOCTYPE html>
 <html lang="zxx">
 
