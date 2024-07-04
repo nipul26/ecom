@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Jul 01, 2024 at 06:15 PM
+-- Generation Time: Jul 04, 2024 at 05:36 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -75,6 +75,20 @@ CREATE TABLE `categories` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `get_in_touch`
+--
+
+CREATE TABLE `get_in_touch` (
+  `id` int(11) NOT NULL,
+  `name` varchar(500) NOT NULL,
+  `email` varchar(500) NOT NULL,
+  `subject` varchar(500) NOT NULL,
+  `message` varchar(10000) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `products`
 --
 
@@ -97,6 +111,13 @@ CREATE TABLE `products` (
   `updated_on` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `products`
+--
+
+INSERT INTO `products` (`product_id`, `product_name`, `sku`, `mrp_price`, `special_price`, `product_main_image`, `product_description`, `product_availble_status`, `related_products_id`, `product_status`, `isdisplayhome`, `meta_title`, `meta_keyword`, `meta_description`, `added_on`, `updated_on`) VALUES
+(1, 'abc', 'abc', 11.11, 10.92, 'avatar-1.jpg', '<p>test</p>', 'In Stock', '1', 1, 1, 'text', 'text', '<p>text,jhgjfdshj</p>', '2024-07-02 20:29:20', '2024-07-02 20:29:20');
+
 -- --------------------------------------------------------
 
 --
@@ -110,6 +131,13 @@ CREATE TABLE `product_multiple_images` (
   `added_on` datetime NOT NULL,
   `update_on` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `product_multiple_images`
+--
+
+INSERT INTO `product_multiple_images` (`product_images_id`, `product_main_id`, `product_image`, `added_on`, `update_on`) VALUES
+(1, 1, 'avatar-1.jpg', '2024-07-02 20:29:20', '2024-07-02 20:29:20');
 
 -- --------------------------------------------------------
 
@@ -214,6 +242,12 @@ ALTER TABLE `categories`
   ADD PRIMARY KEY (`categories_id`);
 
 --
+-- Indexes for table `get_in_touch`
+--
+ALTER TABLE `get_in_touch`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `products`
 --
 ALTER TABLE `products`
@@ -266,16 +300,22 @@ ALTER TABLE `categories`
   MODIFY `categories_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `get_in_touch`
+--
+ALTER TABLE `get_in_touch`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `product_multiple_images`
 --
 ALTER TABLE `product_multiple_images`
-  MODIFY `product_images_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `product_images_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `sitesetting`
