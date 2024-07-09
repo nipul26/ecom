@@ -24,17 +24,46 @@ if(isset($_POST['submit'])){
             </script>
             <?php
         } else {
-            $insertSql = mysqli_query($conn,"INSERT INTO `banner`(`banner_name`, `banner_type`, `banner_status`, `added_on`, `updated_on`) VALUES ('$banner_name', '$banner_type', '$banner_status', '$added_on', '$updated_on')");
-            if($insertSql){
+            $allowed_types = ['jpg', 'jpeg', 'png'];
+            $banner_image = $_FILES['banner_image']['name'];
+            $banner_image_tmp = $_FILES['banner_image']['tmp_name'];
+            $file_extension = pathinfo($banner_image, PATHINFO_EXTENSION);
+
+            if(in_array($file_extension, $allowed_types)){
+                $target_dir = "../media/banner/";
+                
+                if (!is_dir($target_dir)) {
+                    mkdir($target_dir, 0777, true);
+                }
+                
+                $target_file = $target_dir . basename($banner_image);
+                
+                if (move_uploaded_file($banner_image_tmp, $target_file)) {
+                    $insertSql = mysqli_query($conn,"INSERT INTO `banner`(`banner_name`, `banner_type`, `banner_images`, `banner_status`, `added_on`, `updated_on`) VALUES ('$banner_name', '$banner_type', '$banner_image', '$banner_status', '$added_on', '$updated_on')");
+                    if($insertSql){
+                        ?>
+                        <script>
+                        Swal.fire('Success', 'Banner Added Successfully.', 'success').then(function() { window.location = 'banner.php'; });
+                        </script>
+                        <?php
+                    } else { 
+                        ?>
+                        <script>
+                        Swal.fire('Error', 'Something went wrong with the database.', 'error');
+                        </script>
+                        <?php
+                    }
+                } else {
+                    ?>
+                    <script>
+                    Swal.fire('Error', 'There was an error uploading the file.', 'error');
+                    </script>
+                    <?php
+                }
+            } else {
                 ?>
                 <script>
-                Swal.fire('Success', 'Banner Added Successfully.', 'success').then(function() { window.location = 'banner.php'; });
-                </script>
-                <?php
-            } else { 
-                ?>
-                <script>
-                Swal.fire('Error', 'Something went wrong with the database.', 'error');
+                Swal.fire('Error', 'Only JPG, JPEG, and PNG files are allowed.', 'error');
                 </script>
                 <?php
             }
@@ -79,6 +108,16 @@ if(isset($_POST['submit'])){
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="col-md-12">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="validationCustom04">Banner Image</label>
+                                            <input type="file" class="form-control" id="validationCustom04" name="banner_image" accept=".jpg,.jpeg,.png" required>
+                                            <div class="invalid-feedback">
+                                                This is a required field.
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     
                                     <div class="col-md-12">
                                         <div class="mb-3">
@@ -103,7 +142,10 @@ $(document).ready(function() {
     $("form").on("submit", function(e) {
         var bannerName = $("#bannerName").val();
         var bannerType = $("#bannerType").val();
+        var fileInput = $("#validationCustom04")[0];
         var regex = /^[A-Za-z]/;
+        var validExtensions = ["jpg", "jpeg", "png"];
+        var fileName = fileInput.value.split('.').pop().toLowerCase();
         
         if (!regex.test(bannerName)) {
             e.preventDefault();
@@ -111,6 +153,9 @@ $(document).ready(function() {
         } else if (bannerType === "") {
             e.preventDefault();
             Swal.fire("Validation Error", "Banner Type is required.", "error");
+        } else if ($.inArray(fileName, validExtensions) == -1) {
+            e.preventDefault();
+            Swal.fire("Validation Error", "Only JPG, JPEG, and PNG files are allowed.", "error");
         }
     });
 });

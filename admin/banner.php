@@ -33,6 +33,7 @@
                               <th style="border-right: 0.3px solid grey;">Id</th>
                               <th style="border-right: 0.3px solid grey;">Name</th>
                               <th style="border-right: 0.3px solid grey;">Types</th>
+                              <th style="border-right: 0.3px solid grey;">Images</th>
                               <th style="border-right: 0.3px solid grey;">Added Date</th>
                               <th style="border-right: 0.3px solid grey;">Update Date</th>
                               <th style="border-right: 0.3px solid grey;">Status</th>
@@ -50,6 +51,12 @@
                               <td style="border-right: 0.3px solid grey;"><?php echo $listData['banner_name']; ?></td>
 
                               <td style="border-right: 0.3px solid grey;"><?php echo $listData['banner_type']; ?></td>
+
+                              <td style="border-right: 0.3px solid grey;">
+    <img src="<?php echo '../media/banner/' . $listData['banner_images']; ?>" style="width: 100px; height: 100px;">
+</td>
+
+
                          
                               <td style="border-right: 0.3px solid grey;"><?php echo $listData['added_on']; ?></td>
                               <td style="border-right: 0.3px solid grey;"><?php echo $listData['updated_on']; ?></td>
@@ -169,11 +176,6 @@ function deleteCategory(id) {
 
 </script>
 
-<!-- DataTables CSS and JS -->
-<link rel="stylesheet" href="assets/css/tableGrid.css">
-<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.10/css/responsive.dataTables.min.css">
-<script src="https://cdn.datatables.net/responsive/2.2.10/js/dataTables.responsive.min.js"></script>
-<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 <script>
   $(document).ready(function () {
     if (!$.fn.DataTable.isDataTable('#example')) {

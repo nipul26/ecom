@@ -11,11 +11,49 @@ if ($_GET['type'] == 'edit' && $_GET['id'] != '') {
     $currentBannerName = $getData['banner_name'];
     $currentBannerType = $getData['banner_type'];
     $currentBannerStatus = $getData['banner_status'] == 1 ? 'checked' : '';
+    $currentBannerImages = $getData['banner_images'];
 
     if (isset($_POST['submit'])) {
         $newBannerName = mysqli_real_escape_string($conn, $_POST['banner_name']);
         $newBannerType = mysqli_real_escape_string($conn, $_POST['banner_type']);
         $newBannerStatus = isset($_POST['banner_status']) ? 1 : 0;
+
+        $bannerImage = $_FILES['banner_image']['name'];
+        $targetDir = "../media/banner/";
+        $targetFile = $targetDir . basename($_FILES["banner_image"]["name"]);
+
+        if ($bannerImage != '') {
+            $imageFileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
+            $allowedTypes = ['jpg', 'jpeg', 'png', 'gif'];
+            if (in_array($imageFileType, $allowedTypes)) {
+                // Check if file already exists
+                if (!file_exists($targetFile)) {
+                    move_uploaded_file($_FILES["banner_image"]["tmp_name"], $targetFile);
+                } else {
+                    ?>
+                    <script type="text/javascript">
+                        swal({
+                            title: "Error",
+                            text: "File already exists.",
+                            icon: "error",
+                            button: "Okay",
+                        });
+                    </script>
+                    <?php
+                }
+            } else {
+                ?>
+                <script type="text/javascript">
+                    swal({
+                        title: "Error",
+                        text: "Invalid file type.",
+                        icon: "error",
+                        button: "Okay",
+                    });
+                </script>
+                <?php
+            }
+        }
 
         $checkRecordSql = mysqli_query($conn, "SELECT * FROM banner WHERE banner_name = '$newBannerName' AND banner_id != '$currentId'");
 
@@ -32,7 +70,12 @@ if ($_GET['type'] == 'edit' && $_GET['id'] != '') {
             <?php
         } else {
             $updated_on = date('Y-m-d H:i:s');
-            $updateSql = mysqli_query($conn, "UPDATE banner SET banner_name = '$newBannerName', banner_type = '$newBannerType', banner_status = '$newBannerStatus', updated_on = '$updated_on' WHERE banner_id = '$currentId'");
+            $updateQuery = "UPDATE banner SET banner_name = '$newBannerName', banner_type = '$newBannerType', banner_status = '$newBannerStatus', updated_on = '$updated_on'";
+            if ($bannerImage != '') {
+                $updateQuery .= ", banner_images = '$bannerImage'";
+            }
+            $updateQuery .= " WHERE banner_id = '$currentId'";
+            $updateSql = mysqli_query($conn, $updateQuery);
 
             if ($updateSql) {
                 ?>
@@ -109,6 +152,18 @@ if ($_GET['type'] == 'edit' && $_GET['id'] != '') {
                                         <div class="mb-3">
                                             <label class="form-label" for="bannerStatus">Banner Status</label><br>
                                             <input type="checkbox" id="bannerStatus" name="banner_status" <?php echo $currentBannerStatus; ?>> Active
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="validationCustom04">Banner Image</label>
+                                            <input type="file" class="form-control" id="validationCustom04" name="banner_image">
+                                            <?php if ($currentBannerImages != '') { ?>
+                                                <img src="../media/banner/<?php echo $currentBannerImages; ?>" alt="Current Banner Image" style="width:100px; margin-top:10px;">
+                                            <?php } ?>
+                                            <div class="invalid-feedback">
+                                                This is a required field.
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
