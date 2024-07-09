@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Jul 04, 2024 at 05:36 PM
+-- Generation Time: Jul 09, 2024 at 06:05 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -48,10 +48,19 @@ CREATE TABLE `banner` (
   `banner_id` int(11) NOT NULL,
   `banner_name` varchar(500) NOT NULL,
   `banner_type` varchar(500) NOT NULL,
+  `banner_images` varchar(10000) NOT NULL,
   `banner_status` tinyint(4) NOT NULL,
   `added_on` datetime NOT NULL,
   `updated_on` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `banner`
+--
+
+INSERT INTO `banner` (`banner_id`, `banner_name`, `banner_type`, `banner_images`, `banner_status`, `added_on`, `updated_on`) VALUES
+(1, 'abc', 'type1', 'auth-bg.jpg', 1, '2024-07-09 21:09:19', '2024-07-09 21:24:44'),
+(2, 'abc', 'type2', 'download.png', 1, '2024-07-09 21:29:51', '2024-07-09 21:29:51');
 
 -- --------------------------------------------------------
 
@@ -71,6 +80,13 @@ CREATE TABLE `categories` (
   `added_on` datetime NOT NULL,
   `update_on` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `categories`
+--
+
+INSERT INTO `categories` (`categories_id`, `categories_name`, `images`, `categories_status`, `isdisplayhome`, `meta_title`, `meta_keyword`, `meta_description`, `added_on`, `update_on`) VALUES
+(1, 'abc', 'avatar-1.jpg', 1, 1, 'test', 'test', 'test', '2024-07-07 20:18:54', '2024-07-07 20:18:54');
 
 -- --------------------------------------------------------
 
@@ -95,6 +111,8 @@ CREATE TABLE `get_in_touch` (
 CREATE TABLE `products` (
   `product_id` int(11) NOT NULL,
   `product_name` varchar(500) NOT NULL,
+  `categories_id` int(11) DEFAULT NULL,
+  `subCategories_id` int(11) DEFAULT NULL,
   `sku` varchar(500) NOT NULL,
   `mrp_price` decimal(10,2) NOT NULL,
   `special_price` decimal(10,2) NOT NULL,
@@ -115,8 +133,9 @@ CREATE TABLE `products` (
 -- Dumping data for table `products`
 --
 
-INSERT INTO `products` (`product_id`, `product_name`, `sku`, `mrp_price`, `special_price`, `product_main_image`, `product_description`, `product_availble_status`, `related_products_id`, `product_status`, `isdisplayhome`, `meta_title`, `meta_keyword`, `meta_description`, `added_on`, `updated_on`) VALUES
-(1, 'abc', 'abc', 11.11, 10.92, 'avatar-1.jpg', '<p>test</p>', 'In Stock', '1', 1, 1, 'text', 'text', '<p>text,jhgjfdshj</p>', '2024-07-02 20:29:20', '2024-07-02 20:29:20');
+INSERT INTO `products` (`product_id`, `product_name`, `categories_id`, `subCategories_id`, `sku`, `mrp_price`, `special_price`, `product_main_image`, `product_description`, `product_availble_status`, `related_products_id`, `product_status`, `isdisplayhome`, `meta_title`, `meta_keyword`, `meta_description`, `added_on`, `updated_on`) VALUES
+(1, 'abc', 1, 1, 'abc', 11.22, 112.22, 'avatar-1.jpg', '<p>test</p>', '1', 'test', 1, 1, 'test', 'test', 'test', '2024-07-08 21:42:26', '2024-07-08 22:27:21'),
+(2, 'abc', 1, 1, 'abc', 11.22, 11.22, 'productavatar-6.jpg', '<p>asdfasdf</p>', '0', 'asd', 1, 1, 'asdfasdf', 'asdfasdf', 'asdfasdf', '2024-07-08 21:49:44', '2024-07-08 21:49:44');
 
 -- --------------------------------------------------------
 
@@ -137,7 +156,11 @@ CREATE TABLE `product_multiple_images` (
 --
 
 INSERT INTO `product_multiple_images` (`product_images_id`, `product_main_id`, `product_image`, `added_on`, `update_on`) VALUES
-(1, 1, 'avatar-1.jpg', '2024-07-02 20:29:20', '2024-07-02 20:29:20');
+(3, 2, 'avatar-6.jpg', '2024-07-08 21:49:44', '2024-07-08 21:49:44'),
+(4, 2, 'avatar-1.jpg', '2024-07-08 21:49:44', '2024-07-08 21:49:44'),
+(8, 1, 'avatar-6.jpg', '2024-07-08 22:20:02', '2024-07-08 22:20:02'),
+(9, 1, 'productavatar-6.jpg', '2024-07-08 22:20:15', '2024-07-08 22:20:15'),
+(10, 1, 'avatar-1.jpg', '2024-07-08 22:27:21', '2024-07-08 22:27:21');
 
 -- --------------------------------------------------------
 
@@ -194,6 +217,13 @@ CREATE TABLE `subcategories` (
   `added_on` datetime NOT NULL,
   `update_on` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `subcategories`
+--
+
+INSERT INTO `subcategories` (`sub_categories_id`, `categories_id`, `sub_categories_name`, `sub_categories_images`, `status`, `meta_title`, `meta_keyword`, `meta_description`, `added_on`, `update_on`) VALUES
+(1, 1, 'abc', 'avatar-1.jpg', 1, 'abc', 'abc', 'abc', '2024-07-07 20:20:48', '2024-07-07 20:20:48');
 
 -- --------------------------------------------------------
 
@@ -291,13 +321,13 @@ ALTER TABLE `aboutus`
 -- AUTO_INCREMENT for table `banner`
 --
 ALTER TABLE `banner`
-  MODIFY `banner_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `banner_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `categories_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `categories_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `get_in_touch`
@@ -309,13 +339,13 @@ ALTER TABLE `get_in_touch`
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `product_multiple_images`
 --
 ALTER TABLE `product_multiple_images`
-  MODIFY `product_images_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `product_images_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `sitesetting`
@@ -327,7 +357,7 @@ ALTER TABLE `sitesetting`
 -- AUTO_INCREMENT for table `subcategories`
 --
 ALTER TABLE `subcategories`
-  MODIFY `sub_categories_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `sub_categories_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `user_login`
