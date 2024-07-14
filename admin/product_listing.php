@@ -57,7 +57,7 @@
                               <td><?php echo $listData['sku']; ?></td>
                               <td><?php echo $listData['mrp_price']; ?></td>
                               <td><?php echo $listData['special_price']; ?></td>
-                              <td><img src="../media/<?php echo $listData['product_main_image']; ?>" style="height: 50px; width: 50px;"></td>
+                              <td><img src="../media/product/<?php echo $listData['product_main_image']; ?>" style="height: 50px; width: 50px;"></td>
                               <td><?php echo $listData['product_description']; ?></td>
                               <td><?php echo $listData['product_availble_status']; ?></td>
                               <td><?php echo $listData['related_products_id']; ?></td>

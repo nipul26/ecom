@@ -1,8 +1,4 @@
 <?php include "header.php"; ?>
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-
 <?php 
 if($_GET['type'] == 'edit' && $_GET['id'] != ''){
     $currentId = $_GET['id'];
@@ -15,9 +11,9 @@ if($_GET['type'] == 'edit' && $_GET['id'] != ''){
         $newCategoryName = mysqli_real_escape_string($conn, $_POST['category_name']);
 
         // Image upload handling
-        if(!empty($_FILES["subcategory_image"]["tmp_name"])) {
+        if(!empty($_FILES["category_image"]["tmp_name"])) {
             $target_dir = "../media/";
-            $target_file = $target_dir . basename($_FILES["subcategory_image"]["name"]);
+            $target_file = $target_dir . basename($_FILES["category_image"]["name"]);
             $uploadOk = 1;
             $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
 
@@ -68,7 +64,7 @@ if($_GET['type'] == 'edit' && $_GET['id'] != ''){
             <script type="text/javascript">
                 swal({
                     title: "Warning",
-                    text: "Category name already exists.",
+                    text: "Data already exists.",
                     icon: "error",
                     button: "Okay",
                 });
@@ -83,7 +79,7 @@ if($_GET['type'] == 'edit' && $_GET['id'] != ''){
                 <script type="text/javascript">
                     swal({
                         title: "Success",
-                        text: "Category name updated successfully.",
+                        text: "Data updated successfully.",
                         icon: "success",
                         button: "Okay",
                     }).then(function() {
@@ -96,7 +92,7 @@ if($_GET['type'] == 'edit' && $_GET['id'] != ''){
                 <script type="text/javascript">
                     swal({
                         title: "Error",
-                        text: "Failed to update category name.",
+                        text: "Failed to update.",
                         icon: "error",
                         button: "Okay",
                     });
@@ -140,8 +136,9 @@ if($_GET['type'] == 'edit' && $_GET['id'] != ''){
                                             <div class="mb-3">
                                                 <label class="form-label" for="image">Category Image</label>
                                                 <input type="file" class="form-control" id="image" name="subcategory_image">
+                                                <br>
                                                 <?php if($currentImage): ?>
-                                                    <div><img src="../media/<?php echo $currentImage; ?>" alt="Current Image" style="height: 100px; width: 100px;"></div>
+                                                    <div><img src="../media/<?php echo $currentImage; ?>" alt="Current Image" style="height: 70px; width: 70px;"></div>
                                                 <?php endif; ?>
                                                 <div class="invalid-feedback">
                                                     Please choose an image file.

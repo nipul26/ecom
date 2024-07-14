@@ -32,94 +32,89 @@ if (isset($_POST['submit'])) {
     $added_on = date('Y-m-d H:i:s');
     $updated_on = date('Y-m-d H:i:s');
 
-    if (!preg_match('/^[a-zA-Z][a-zA-Z0-9_]*$/', $categories_name)) { ?>
-        <script>swal('Error', 'Category name must start with alphabets and cannot contain spaces or special characters at the beginning.', 'error');</script>
+    // Check if the subcategory already exists for the given category
+    $checkSql = mysqli_query($conn, "SELECT * FROM subcategories WHERE sub_categories_name = '$categories_name' AND categories_id = '$categories_id'");
+    if (mysqli_num_rows($checkSql) > 0) { ?>
+        <script>swal('Error', 'Subcategory name already exists.', 'error');</script>
         <?php
     } else {
-        // Check if the subcategory already exists for the given category
-        $checkSql = mysqli_query($conn, "SELECT * FROM subcategories WHERE sub_categories_name = '$categories_name' AND categories_id = '$categories_id'");
-        if (mysqli_num_rows($checkSql) > 0) { ?>
-            <script>swal('Error', 'Subcategory name already exists.', 'error');</script>
-            <?php
-        } else {
-            $insertSql = mysqli_query($conn, "INSERT INTO `subcategories`(`categories_id`, `sub_categories_name`, `sub_categories_images`, `meta_title`, `meta_keyword`, `meta_description`, `status`, `added_on`, `update_on`) VALUES ('$categories_id', '$categories_name', '', '$meta_title', '$meta_keyword', '$meta_description', '1', '$added_on', '$updated_on')");
-            if ($insertSql) {
-                $sub_categories_id = mysqli_insert_id($conn);
-                $uploadOk = 1;
-                $target_dir = "../media/subcategories/";
+        $insertSql = mysqli_query($conn, "INSERT INTO `subcategories`(`categories_id`, `sub_categories_name`, `sub_categories_images`, `meta_title`, `meta_keyword`, `meta_description`, `status`, `added_on`, `update_on`) VALUES ('$categories_id', '$categories_name', '', '$meta_title', '$meta_keyword', '$meta_description', '1', '$added_on', '$updated_on')");
+        if ($insertSql) {
+            $sub_categories_id = mysqli_insert_id($conn);
+            $uploadOk = 1;
+            $target_dir = "../media/subcategories/";
 
-                if (!file_exists($target_dir)) {
-                    mkdir($target_dir, 0777, true);
+            if (!file_exists($target_dir)) {
+                mkdir($target_dir, 0777, true);
+            }
+
+            foreach ($_FILES['category_images']['name'] as $key => $val) {
+                $filename = basename($_FILES['category_images']['name'][$key]);
+                $target_file = $target_dir . $filename;
+                $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+                $check = getimagesize($_FILES['category_images']['tmp_name'][$key]);
+
+                if ($check === false) { ?>
+                    <script>swal('Error', 'File "<?php echo $filename; ?>" is not an image.', 'error');</script>
+                    <?php
+                    $uploadOk = 0;
+                    break;
                 }
+                if ($_FILES['category_images']['size'][$key] > 5000000) { ?>
+                    <script>swal('Error', 'File "<?php echo $filename; ?>" is too large.', 'error');</script>
+                    <?php
+                    $uploadOk = 0;
+                    break;
+                }
+                if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "gif") { ?>
+                    <script>swal('Error', 'Only JPG, JPEG, PNG & GIF files are allowed.', 'error');</script>
+                    <?php
+                    $uploadOk = 0;
+                    break;
+                }
+                if ($uploadOk == 1) {
+                    if (move_uploaded_file($_FILES['category_images']['tmp_name'][$key], $target_file)) {
 
-                foreach ($_FILES['category_images']['name'] as $key => $val) {
-                    $filename = basename($_FILES['category_images']['name'][$key]);
-                    $target_file = $target_dir . $filename;
-                    $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-                    $check = getimagesize($_FILES['category_images']['tmp_name'][$key]);
-
-                    if ($check === false) { ?>
-                        <script>swal('Error', 'File "<?php echo $filename; ?>" is not an image.', 'error');</script>
-                        <?php
-                        $uploadOk = 0;
-                        break;
-                    }
-                    if ($_FILES['category_images']['size'][$key] > 5000000) { ?>
-                        <script>swal('Error', 'File "<?php echo $filename; ?>" is too large.', 'error');</script>
-                        <?php
-                        $uploadOk = 0;
-                        break;
-                    }
-                    if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "gif") { ?>
-                        <script>swal('Error', 'Only JPG, JPEG, PNG & GIF files are allowed.', 'error');</script>
-                        <?php
-                        $uploadOk = 0;
-                        break;
-                    }
-                    if ($uploadOk == 1) {
-                        if (move_uploaded_file($_FILES['category_images']['tmp_name'][$key], $target_file)) {
-
-                            $current_images = '';
-                            $getImagesQuery = mysqli_query($conn, "SELECT sub_categories_images FROM subcategories WHERE sub_categories_id = '$sub_categories_id'");
-                            $currentData = mysqli_fetch_assoc($getImagesQuery);
-                            if ($currentData) {
-                                $current_images = $currentData['sub_categories_images'];
-                                if (!empty($current_images)) {
-                                    $current_images .= ',';
-                                }
-                                $current_images .= $filename;
-                            } else {
-                                $current_images = $filename;
+                        $current_images = '';
+                        $getImagesQuery = mysqli_query($conn, "SELECT sub_categories_images FROM subcategories WHERE sub_categories_id = '$sub_categories_id'");
+                        $currentData = mysqli_fetch_assoc($getImagesQuery);
+                        if ($currentData) {
+                            $current_images = $currentData['sub_categories_images'];
+                            if (!empty($current_images)) {
+                                $current_images .= ',';
                             }
-
-                            $updateImagesSql = mysqli_query($conn, "UPDATE subcategories SET sub_categories_images = '$current_images' WHERE sub_categories_id = '$sub_categories_id'");
-                            if (!$updateImagesSql) { ?>
-                                <script>swal('Error', 'Failed to update subcategory with image path.', 'error');</script>
-                                <?php
-                                $uploadOk = 0;
-                                break;
-                            }
+                            $current_images .= $filename;
                         } else {
-                            $error = error_get_last();
-                            $errorMessage = $error['message'];
-                            ?>
-                            <script>swal('Error', 'Failed to move file to destination folder. <?php echo $errorMessage; ?>', 'error');</script>
+                            $current_images = $filename;
+                        }
+
+                        $updateImagesSql = mysqli_query($conn, "UPDATE subcategories SET sub_categories_images = '$current_images' WHERE sub_categories_id = '$sub_categories_id'");
+                        if (!$updateImagesSql) { ?>
+                            <script>swal('Error', 'Failed to update subcategory with image path.', 'error');</script>
                             <?php
                             $uploadOk = 0;
                             break;
                         }
+                    } else {
+                        $error = error_get_last();
+                        $errorMessage = $error['message'];
+                        ?>
+                        <script>swal('Error', 'Failed to move file to destination folder. <?php echo $errorMessage; ?>', 'error');</script>
+                        <?php
+                        $uploadOk = 0;
+                        break;
                     }
                 }
+            }
 
-                if ($uploadOk == 1) { ?>
-                    <script>
-                    swal('Success', 'Data Added Successfully.', 'success').then(function() { window.location = 'SidemenuSubcategories.php'; });</script>
-                    <?php
-                }
-            } else { ?>
-                <script>swal('Error', 'Something went wrong with the database.', 'error');</script>
+            if ($uploadOk == 1) { ?>
+                <script>
+                swal('Success', 'Data Added Successfully.', 'success').then(function() { window.location = 'SidemenuSubcategories.php'; });</script>
                 <?php
             }
+        } else { ?>
+            <script>swal('Error', 'Something went wrong with the database.', 'error');</script>
+            <?php
         }
     }
 }

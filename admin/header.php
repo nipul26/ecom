@@ -44,6 +44,7 @@
       <script src="assets/libs/choices.js/public/assets/scripts/choices.min.js"></script>    
       <!-- init js -->
       <script src="assets/js/pages/form-advanced.init.js"></script>
+      <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
       <style type="text/css">
          .wrapper {
          margin-top: 5vh;
@@ -253,6 +254,7 @@
                      <span class="menu-item" data-key="t-dashboards">Dashboard</span>
                      </a>
                   </li>
+
                   <li class="menu-title" data-key="t-catalog">Catalog</li>
                   <li>
                      <a href="javascript: void(0);" class="has-arrow">
@@ -265,7 +267,19 @@
                         <li><a href="product_listing.php" data-key="t-read-email">Products</a></li>
                      </ul>
                   </li>
-                
+                  
+                  <li class="menu-title" data-key="t-catalog">Product Master</li>
+                  <li>
+                     <a href="javascript: void(0);" class="has-arrow">
+                     <i class="bx bx-file icon nav-icon"></i>
+                     <span class="menu-item" data-key="t-catalog">Product Master</span>
+                     </a>
+                     <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="weight.php" data-key="t-inbox">Weight Master</a></li>
+                     </ul>
+                  </li>
+
+
 
                   <li class="menu-title" data-key="t-banner">Manage Banner</li>
                   <li>

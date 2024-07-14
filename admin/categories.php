@@ -54,44 +54,38 @@
                          
                               <td style="border-right: 0.3px solid grey;"><?php echo $listData['added_on']; ?></td>
                               <td style="border-right: 0.3px solid grey;"><?php echo $listData['update_on']; ?></td>
-<td style="border-right: 0.3px solid grey;">
-    <div class="square-switch">
-        <?php 
-        $checked = $listData["categories_status"] == 1 ? 'checked' : '';
-        ?>
-        <input type="checkbox" id="categories-switch<?php echo $listData['categories_id']; ?>" switch="bool" <?php echo $checked; ?> onclick="changeStatus(<?php echo $listData['categories_id']; ?>);" />
-        <label for="categories-switch<?php echo $listData['categories_id']; ?>" data-on-label="Yes" data-off-label="No"></label>
-    </div>
-</td>
-<td style="border-right: 0.3px solid grey;">
-    <div class="square-switch">
-        <?php 
-        $checked = $listData["isdisplayhome"] == 1 ? 'checked' : '';
-        ?>
-        <input type="checkbox" id="displayhome-switch<?php echo $listData['categories_id']; ?>" switch="bool" <?php echo $checked; ?> onclick="displayHome(<?php echo $listData['categories_id']; ?>);" />
-        <label for="displayhome-switch<?php echo $listData['categories_id']; ?>" data-on-label="Yes" data-off-label="No"></label>
-    </div>
-</td>
+                            <td style="border-right: 0.3px solid grey;">
+                                <div class="square-switch">
+                                    <?php 
+                                    $checked = $listData["categories_status"] == 1 ? 'checked' : '';
+                                    ?>
+                                    <input type="checkbox" id="categories-switch<?php echo $listData['categories_id']; ?>" switch="bool" <?php echo $checked; ?> onclick="changeStatus(<?php echo $listData['categories_id']; ?>);" />
+                                    <label for="categories-switch<?php echo $listData['categories_id']; ?>" data-on-label="Yes" data-off-label="No"></label>
+                                </div>
+                            </td>
+                            <td style="border-right: 0.3px solid grey;">
+                                <div class="square-switch">
+                                    <?php 
+                                    $checked = $listData["isdisplayhome"] == 1 ? 'checked' : '';
+                                    ?>
+                                    <input type="checkbox" id="displayhome-switch<?php echo $listData['categories_id']; ?>" switch="bool" <?php echo $checked; ?> onclick="displayHome(<?php echo $listData['categories_id']; ?>);" />
+                                    <label for="displayhome-switch<?php echo $listData['categories_id']; ?>" data-on-label="Yes" data-off-label="No"></label>
+                                </div>
+                            </td>
 
-                              <td>
-                                 <div class="table-btn-actions">
-                                    <button type="button" class="btn btn-success">
+                            <td>
+                                <div class="table-btn-actions">
+                                    <button type="button" class="btn btn-success waves-effect btn-label waves-light">
                                         <a href="edit_category.php?type=edit&id=<?php echo $listData['categories_id']; ?>" style="color:white;">
                                         <i class="bx bxs-edit label-icon"></i></a>
                                     </button>
-                                    <button type="button" onclick="deleteCategory(<?php echo $listData['categories_id']; ?>)" class="btn btn-danger ">
+                                    <button type="button" onclick="deleteCategory(<?php echo $listData['categories_id']; ?>)" class="btn btn-danger waves-effect btn-label waves-light">
                                         <i class="mdi mdi-trash-can label-icon"></i>
                                     </button>
+                                </div>
+                            </td>
+                        </tr>
 
-                                    <button type="button" class="btn btn-success">
-                                        <a href="subcategories_listing.php?type=subcategories&id=<?php echo $listData['categories_id']; ?>" style="color:white;">
-                                        <i class="bx bx-sitemap icon nav-icon"></i></a>
-                                    </button>
-
-
-                                 </div>
-                              </td>
-                           </tr>
                            <?php 
                            }
                            ?>

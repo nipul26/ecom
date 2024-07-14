@@ -1,8 +1,4 @@
 <?php include "header.php"; ?>
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-
 <?php 
 if(isset($_POST['submit'])){
 
@@ -13,7 +9,6 @@ if(isset($_POST['submit'])){
     $added_on = date('Y-m-d H:i:s');
     $updated_on = date('Y-m-d H:i:s');
     $isDisplayHome = isset($_POST['banner_status']) ? 1 : 0;
-
     $target_dir = "../media/";
 
     $target_file = $target_dir . basename($_FILES["category_image"]["name"]);
@@ -41,46 +36,40 @@ if(isset($_POST['submit'])){
         $uploadOk = 0;
     }
 
-    if(!preg_match('/^[a-zA-Z][a-zA-Z0-9_]*$/', $categories_name)){
+    $checkSql = mysqli_query($conn,"SELECT * FROM categories WHERE categories_name = '$categories_name'");
+    if(mysqli_num_rows($checkSql) > 0){
         ?>
-        <script>swal('Error', 'Category name must start with alphabets and cannot contain spaces or special characters at the beginning.', 'error');</script>
+        <script>swal('Error', 'Data Already Exist.', 'error');</script>
         <?php
     } else {
-        $checkSql = mysqli_query($conn,"SELECT * FROM categories WHERE categories_name = '$categories_name'");
-        if(mysqli_num_rows($checkSql) > 0){
+        if ($uploadOk == 0) {
             ?>
-            <script>swal('Error', 'Data Already Exist.', 'error');</script>
+            <script>swal('Error', 'Your file was not uploaded.', 'error');</script>
             <?php
         } else {
-            if ($uploadOk == 0) {
-                ?>
-                <script>swal('Error', 'Your file was not uploaded.', 'error');</script>
-                <?php
-            } else {
-                if (is_uploaded_file($_FILES["category_image"]["tmp_name"])) {
-                    if (move_uploaded_file($_FILES["category_image"]["tmp_name"], $target_file)) {
-                        // Store only the image name in the database
-                        $image_name = basename($_FILES["category_image"]["name"]);
-                        $insertSql = mysqli_query($conn,"INSERT INTO `categories`(`categories_name`, `categories_status`, `images`, `isdisplayhome`, `meta_title`, `meta_keyword`, `meta_description`, `added_on`, `update_on`) VALUES ('$categories_name', '1', '$image_name', '$isDisplayHome', '$meta_title', '$meta_keyword', '$meta_description', '$added_on', '$updated_on')");
-                        if($insertSql){
-                            ?>
-                            <script>swal('Success', 'Data Added Successfully.', 'success').then(function() { window.location = 'categories.php'; });</script>
-                            <?php
-                        } else {
-                           ?>
-                            <script>swal('Error', 'Something went wrong with the database.', 'error');</script>
-                            <?php
-                        }
-                    } else {
+            if (is_uploaded_file($_FILES["category_image"]["tmp_name"])) {
+                if (move_uploaded_file($_FILES["category_image"]["tmp_name"], $target_file)) {
+                    // Store only the image name in the database
+                    $image_name = basename($_FILES["category_image"]["name"]);
+                    $insertSql = mysqli_query($conn,"INSERT INTO `categories`(`categories_name`, `categories_status`, `images`, `isdisplayhome`, `meta_title`, `meta_keyword`, `meta_description`, `added_on`, `update_on`) VALUES ('$categories_name', '1', '$image_name', '$isDisplayHome', '$meta_title', '$meta_keyword', '$meta_description', '$added_on', '$updated_on')");
+                    if($insertSql){
                         ?>
-                        <script>swal('Error', 'There was an error uploading your file.', 'error');</script>
+                        <script>swal('Success', 'Data Added Successfully.', 'success').then(function() { window.location = 'categories.php'; });</script>
+                        <?php
+                    } else {
+                       ?>
+                        <script>swal('Error', 'Something went wrong with the database.', 'error');</script>
                         <?php
                     }
                 } else {
                     ?>
-                    <script>swal('Error', 'Temporary file not found.', 'error');</script>
+                    <script>swal('Error', 'There was an error uploading your file.', 'error');</script>
                     <?php
                 }
+            } else {
+                ?>
+                <script>swal('Error', 'Temporary file not found.', 'error');</script>
+                <?php
             }
         }
     }
